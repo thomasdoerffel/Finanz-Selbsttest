@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Finanz‑Selbsttest – Thomas Dörffel</title>
+<style>
+  :root{
+    --rose:#F5D5D5; --gold:#D4AF37; --anth:#2E2E2E; --bg:#ffffff;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    color:var(--anth); background:var(--bg);
+  }
+  header{
+    background:linear-gradient(180deg, var(--rose), #fff);
+    padding:24px 16px; text-align:center; border-bottom:4px solid var(--gold);
+  }
+  h1{margin:0 0 8px; font-size:clamp(22px, 4vw, 34px);}
+  h2{margin:24px 0 8px; font-size:clamp(18px, 3vw, 24px);}
+  p.lead{max-width:800px; margin:0 auto; font-size:clamp(14px, 2.2vw, 18px);}
+  main{max-width:920px; margin:24px auto; padding:0 16px 48px;}
+  .card{
+    border:1px solid #eee; border-radius:16px; padding:20px; margin:16px 0; background:#fff;
+    box-shadow:0 6px 18px rgba(0,0,0,0.06);
+  }
+  .q{margin:14px 0;}
+  .q legend{font-weight:600; margin-bottom:8px;}
+  .opt{display:flex; gap:12px; flex-wrap:wrap;}
+  label.opt-item{display:flex; gap:8px; align-items:center; background:#fafafa; padding:10px 12px; border-radius:12px; border:1px solid #eee; cursor:pointer;}
+  input[type="radio"], input[type="checkbox"]{accent-color:var(--gold);}
+  .actions{display:flex; gap:12px; flex-wrap:wrap; margin-top:16px;}
+  button, .btn{
+    background:var(--anth); color:#fff; border:none; padding:12px 16px; border-radius:12px; cursor:pointer; font-weight:600;
+  }
+  button.secondary{background:#fff; color:var(--anth); border:2px solid var(--anth);}
+  .muted{color:#666; font-size:14px}
+  .result{border-left:6px solid var(--gold); padding-left:16px;}
+  .grid{display:grid; gap:16px; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));}
+  .badge{display:inline-block; padding:6px 10px; border-radius:999px; background:var(--rose); border:1px solid var(--gold); font-weight:600}
+  footer{background:#faf7f7; border-top:1px solid #eee; padding:20px 16px; text-align:center; color:#555;}
+  .small{font-size:13px; color:#555}
+  .hr{height:1px; background:#eee; margin:16px 0;}
+  .contact{display:grid; gap:12px; grid-template-columns:1fr; max-width:720px;}
+  input[type="text"],input[type="email"],input[type="tel"], textarea{
+    width:100%; padding:12px 14px; border-radius:10px; border:1px solid #ddd; font-size:15px;
+  }
+  textarea{min-height:110px}
+  .pill{background:var(--rose); padding:10px 12px; border-radius:12px; border:1px solid var(--gold);}
+</style>
+</head>
+<body>
+<header>
+  <h1>Finanz‑Selbsttest</h1>
+  <p class="lead">Wie fit sind Ihre Finanzen – heute und in Zukunft? Beantworten Sie 7 kurze Fragen und erhalten Sie sofort eine Einschätzung mit konkreten nächsten Schritten. 
+  Anschließend können Sie Ihre Ergebnisse mit uns teilen und ein kostenloses Erstgespräch anfragen.</p>
+</header>
+
+<main>
+  <section class="card">
+    <h2>1) Fragen beantworten</h2>
+    <form id="quiz" onsubmit="return false">
+      <fieldset class="q">
+        <legend>Monatliche Sparquote</legend>
+        <div class="opt">
+          <label class="opt-item"><input type="radio" name="sparquote" value="2"> Ich spare regelmäßig und kenne die Höhe.</label>
+          <label class="opt-item"><input type="radio" name="sparquote" value="1"> Ich spare unregelmäßig oder grob geschätzt.</label>
+          <label class="opt-item"><input type="radio" name="sparquote" value="0"> Ich spare aktuell nicht.</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="q">
+        <legend>Ziele & Planung</legend>
+        <div class="opt">
+          <label class="opt-item"><input type="radio" name="ziele" value="2"> Konkrete Ziele mit Zeit- & Finanzplan.</label>
+          <label class="opt-item"><input type="radio" name="ziele" value="1"> Ziele vorhanden, aber ohne Plan.</label>
+          <label class="opt-item"><input type="radio" name="ziele" value="0"> Keine klaren Ziele definiert.</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="q">
+        <legend>Überblick über Versicherungen & Verträge</legend>
+        <div class="opt">
+          <label class="opt-item"><input type="radio" name="ueberblick" value="2"> Voller Überblick (digital/Portal).</label>
+          <label class="opt-item"><input type="radio" name="ueberblick" value="1"> Teilweise Überblick.</label>
+          <label class="opt-item"><input type="radio" name="ueberblick" value="0"> Kaum/kein Überblick.</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="q">
+        <legend>Regelmäßige Überprüfung</legend>
+        <div class="opt">
+          <label class="opt-item"><input type="radio" name="review" value="2"> Mindestens einmal pro Jahr.</label>
+          <label class="opt-item"><input type="radio" name="review" value="1"> Seltener als jährlich.</label>
+          <label class="opt-item"><input type="radio" name="review" value="0"> Gar nicht / nur bei Bedarf.</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="q">
+        <legend>Rentenlücke (Altersvorsorge)</legend>
+        <div class="opt">
+          <label class="opt-item"><input type="radio" name="rente" value="2"> Rentenlücke bekannt & Plan vorhanden.</label>
+          <label class="opt-item"><input type="radio" name="rente" value="1"> Rentenlücke bewusst, aber ohne Plan.</label>
+          <label class="opt-item"><input type="radio" name="rente" value="0"> Rentenlücke unbekannt / nicht beachtet.</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="q">
+        <legend>Jährlicher Wechsel / Tarif-Check</legend>
+        <div class="opt">
+          <label class="opt-item"><input type="radio" name="wechsel" value="2"> Ich prüfe jährlich mögliche Tarif-/Anbieterwechsel.</label>
+          <label class="opt-item"><input type="radio" name="wechsel" value="1"> Ich prüfe unregelmäßig.</label>
+          <label class="opt-item"><input type="radio" name="wechsel" value="0"> Ich prüfe nicht.</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="q">
+        <legend>Sicherheitsnetz (Notgroschen & Absicherung)</legend>
+        <div class="opt">
+          <label class="opt-item"><input type="radio" name="sicherheitsnetz" value="2"> 3–6 Monatsausgaben + Absicherungen passen.</label>
+          <label class="opt-item"><input type="radio" name="sicherheitsnetz" value="1"> Teilweise vorhanden.</label>
+          <label class="opt-item"><input type="radio" name="sicherheitsnetz" value="0"> Kaum/kein Sicherheitsnetz.</label>
+        </div>
+      </fieldset>
+
+      <div class="actions">
+        <button id="calc">Ergebnis anzeigen</button>
+        <button id="reset" type="reset" class="secondary">Zurücksetzen</button>
+      </div>
+    </form>
+  </section>
+
+  <section id="resultSection" class="card" style="display:none">
+    <h2>2) Ihre Auswertung</h2>
+    <div id="scoreBadge" class="badge">Score: 0/14</div>
+    <div class="hr"></div>
+    <div id="resultText" class="result">
+      <!-- dynamic text -->
+    </div>
+    <p class="small muted">Hinweis: Diese Einschätzung ersetzt keine persönliche Beratung – sie zeigt Potenziale und nächste Schritte.</p>
+  </section>
+
+  <section id="contactSection" class="card" style="display:none">
+    <h2>3) Ergebnisse schicken & Kontakt aufnehmen</h2>
+    <p class="pill">Wir melden uns kurzfristig mit konkreten Vorschlägen – z. B. zu Einspar-Potenzialen, strukturierter Planung oder dem Schließen Ihrer Rentenlücke.</p>
+    <form id="contactForm" class="contact" onsubmit="return false">
+      <div class="grid">
+        <div>
+          <label for="name">Ihr Name</label>
+          <input id="name" name="name" type="text" placeholder="Max Mustermann" required>
+        </div>
+        <div>
+          <label for="email">E-Mail</label>
+          <input id="email" name="email" type="email" placeholder="max@example.com" required>
+        </div>
+      </div>
+      <div class="grid">
+        <div>
+          <label for="tel">Telefon (optional)</label>
+          <input id="tel" name="tel" type="tel" placeholder="01522 3076830" required>
+        </div>
+        <div>
+          <label for="pref">Bevorzugter Kontaktweg</label>
+          <input id="pref" name="pref" type="text" placeholder="Telefon / E-Mail / WhatsApp">
+        </div>
+      </div>
+      <div>
+        <label for="msg">Nachricht (optional)</label>
+        <textarea id="msg" name="msg" placeholder="Ihr Anliegen (z. B. Einspar-Potenzial, Altersvorsorge, Überblick über Verträge)"></textarea>
+      </div>
+      <div class="actions">
+        <button id="sendBtn">Ergebnisse senden</button>
+        <a id="mailtoLink" class="btn" href="#" style="display:none">Per E‑Mail öffnen</a>
+      </div>
+      <p class="small">Direkter Kontakt: <b>Thomas Dörffel</b> – Unternehmensberater für den privaten Haushalt • ✉️ thomas.doerffel@telis-finanz.de • 📞 01522 3076830 • Instagram: @thomas_doerffel</p>
+    </form>
+  </section>
+
+</main>
+
+<footer>
+  <div class="small">
+    © Thomas Dörffel · Unternehmensberater für den privaten Haushalt · Alle Angaben ohne Gewähr.
+  </div>
+</footer>
+
+<script>
+const calcBtn = document.getElementById('calc');
+const quizForm = document.getElementById('quiz');
+const resultSection = document.getElementById('resultSection');
+const contactSection = document.getElementById('contactSection');
+const scoreBadge = document.getElementById('scoreBadge');
+const resultText = document.getElementById('resultText');
+const mailtoLink = document.getElementById('mailtoLink');
+const sendBtn = document.getElementById('sendBtn');
+
+function getScore(){
+  const fields = ['sparquote','ziele','ueberblick','review','rente','wechsel','sicherheitsnetz'];
+  let total = 0; let answers = {};
+  for(const f of fields){
+    const el = quizForm.querySelector('input[name="'+f+'"]:checked');
+    answers[f] = el ? Number(el.value) : null;
+    total += el ? Number(el.value) : 0;
+  }
+  return {total, answers};
+}
+
+function buildAdvice(total){
+  // 0..14 scale
+  if(total >= 11){
+    return {
+      title: "Sehr gut aufgestellt – Feinschliff lohnt sich",
+      bullets: [
+        "Optimieren Sie Zinsen, Kosten & Steueraspekte – so bleibt mehr vom Ertrag.",
+        "Rentenlücke regelmäßig prüfen, damit Sie dauerhaft im Plan bleiben.",
+        "Jährlichen Tarif-/Anbietercheck weiterführen – wir unterstützen strukturiert."
+      ],
+      cta: "Lassen Sie uns gemeinsam den Feinschliff machen – wir identifizieren zusätzliche Potenziale."
+    };
+  } else if(total >= 6){
+    return {
+      title: "Gute Basis – deutliches Potenzial nach oben",
+      bullets: [
+        "Sparquote, Ziele & Rentenlücke klar definieren – der Plan ist die halbe Miete.",
+        "Verträge bündeln und digital im Mandantenportal organisieren.",
+        "Jährlichen Wechselcheck einführen: Tarife/Anbieter vergleichen, Kosten senken."
+      ],
+      cta: "Wir erstellen mit Ihnen eine strukturierte Haushaltsanalyse und priorisieren die wichtigsten Hebel."
+    };
+  } else {
+    return {
+      title: "Jetzt starten – große Wirkung mit simplen Schritten",
+      bullets: [
+        "Transparenz schaffen: Einnahmen/Ausgaben, Notgroschen, Absicherung.",
+        "Rentenlücke bestimmen und passenden Vorsorgeplan starten.",
+        "Schnell wirksame Einsparungen: Verträge prüfen, unnötige Kosten reduzieren."
+      ],
+      cta: "Wir begleiten Sie vom Überblick bis zur Umsetzung – Schritt für Schritt und alles aus einer Hand."
+    };
+  }
+}
+
+calcBtn.addEventListener('click', function(){
+  const {total, answers} = getScore();
+  // require all questions
+  if(Object.values(answers).some(v => v === null)){
+    alert("Bitte beantworten Sie alle Fragen.");
+    return;
+  }
+  scoreBadge.textContent = "Score: " + total + "/14";
+  const adv = buildAdvice(total);
+  resultText.innerHTML = "<h3>"+adv.title+"</h3><ul>"+adv.bullets.map(b=>"<li>"+b+"</li>").join("")+"</ul><p><strong>"+adv.cta+"</strong></p>";
+  resultSection.style.display = 'block';
+  contactSection.style.display = 'block';
+  window.scrollTo({top: resultSection.offsetTop - 12, behavior:'smooth'});
+});
+
+sendBtn.addEventListener('click', function(){
+  const {total, answers} = getScore();
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const tel = document.getElementById('tel').value.trim();
+  const pref = document.getElementById('pref').value.trim();
+  const msg = document.getElementById('msg').value.trim();
+
+  if(!name || !email){
+    alert("Bitte Name und E‑Mail ausfüllen.");
+    return;
+  }
+
+  // Map answers to readable text
+  const labels = {
+    sparquote:["Ich spare aktuell nicht.","Ich spare unregelmäßig.","Ich spare regelmäßig und kenne die Höhe."],
+    ziele:["Keine klaren Ziele definiert.","Ziele vorhanden, aber ohne Plan.","Konkrete Ziele mit Zeit- & Finanzplan."],
+    ueberblick:["Kaum/kein Überblick.","Teilweise Überblick.","Voller Überblick (digital/Portal)."],
+    review:["Gar nicht / nur bei Bedarf.","Seltener als jährlich.","Mindestens einmal pro Jahr."],
+    rente:["Rentenlücke unbekannt / nicht beachtet.","Rentenlücke bewusst, aber ohne Plan.","Rentenlücke bekannt & Plan vorhanden."],
+    wechsel:["Ich prüfe nicht.","Ich prüfe unregelmäßig.","Ich prüfe jährlich mögliche Tarif-/Anbieterwechsel."],
+    sicherheitsnetz:["Kaum/kein Sicherheitsnetz.","Teilweise vorhanden.","3–6 Monatsausgaben + Absicherungen passen."]
+  };
+
+  function textFor(field, value){
+    if(value===null) return "–";
+    const idx = Number(value);
+    return labels[field][idx];
+  }
+
+  const lines = [
+    "Finanz‑Selbsttest – Ergebnis",
+    "Name: "+name,
+    "E‑Mail: "+email,
+    "Telefon: "+tel,
+    (pref ? "Bevorzugter Kontaktweg: "+pref : ""),
+    "",
+    "Score: "+total+"/14",
+    "Sparquote: "+textFor('sparquote', answers.sparquote),
+    "Ziele & Planung: "+textFor('ziele', answers.ziele),
+    "Überblick: "+textFor('ueberblick', answers.ueberblick),
+    "Regelmäßige Überprüfung: "+textFor('review', answers.review),
+    "Rentenlücke: "+textFor('rente', answers.rente),
+    "Jährlicher Wechsel/Tarif-Check: "+textFor('wechsel', answers.wechsel),
+    "Sicherheitsnetz: "+textFor('sicherheitsnetz', answers.sicherheitsnetz),
+    "",
+    (msg ? "Nachricht: "+msg : ""),
+    "",
+    "Bitte um Rückmeldung mit Vorschlägen (Einsparungen, Planung, Altersvorsorge)."
+  ].filter(Boolean);
+
+  const body = encodeURIComponent(lines.join("\n"));
+  const subject = encodeURIComponent("Finanz‑Selbsttest – Kontakt");
+  const to = "thomas.doerffel@telis-finanz.de";
+  const href = `mailto:${to}?subject=${subject}&body=${body}`;
+  const link = document.getElementById('mailtoLink');
+  link.href = href;
+  link.style.display = 'inline-block';
+  link.textContent = "E‑Mail mit Ergebnissen öffnen";
+  // Versuch automatisches Öffnen (manche Browser blocken; Link als Fallback sichtbar)
+  window.location.href = href;
+});
+</script>
+</body>
+</html>
