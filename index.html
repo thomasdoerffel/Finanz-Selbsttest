@@ -32,6 +32,8 @@
   input[type="text"],input[type="email"],input[type="tel"], textarea{ width:100%; padding:12px 14px; border-radius:10px; border:1px solid #ddd; font-size:15px; }
   textarea{ min-height:110px }
   .pill{ background:#F5D5D5; padding:10px 12px; border-radius:12px; border:1px solid #D4AF37; }
+  .success{ background:#ecfff1; border:1px solid #b2f0c2; color:#0a7a2a; padding:12px 14px; border-radius:12px; display:none; }
+  .error{ background:#fff4f4; border:1px solid #f0b2b2; color:#7a0a0a; padding:12px 14px; border-radius:12px; display:none; }
 </style>
 </head>
 <body>
@@ -108,7 +110,7 @@
       </fieldset>
 
       <div class="actions">
-        <button id="calc" type="button" onclick="calcClicked()">Ergebnis anzeigen</button>
+        <button id="calc" type="button">Ergebnis anzeigen</button>
         <button id="reset" type="reset" class="secondary">Zurücksetzen</button>
       </div>
     </form>
@@ -125,7 +127,13 @@
   <section id="contactSection" class="card" style="display:none">
     <h2>3) Ergebnisse schicken & Kontakt aufnehmen</h2>
     <p class="pill">Ich melde mich kurzfristig bei dir mit konkreten Vorschlägen – z. B. zu Einsparungen, besserer Planung oder dem Schließen deiner Rentenlücke.</p>
-    <form id="contactForm" class="contact" onsubmit="return false">
+
+    <div id="notice-missing" class="error">Bitte erst die 7 Fragen beantworten und „Ergebnis anzeigen“ klicken.</div>
+    <div id="notice-success" class="success">Danke – deine Ergebnisse wurden gesendet. Ich melde mich kurzfristig bei dir.</div>
+    <div id="notice-fail" class="error">Senden fehlgeschlagen. Bitte prüfe die Felder oder versuche es später erneut.</div>
+
+    <form id="contactForm" class="contact">
+      <input type="hidden" name="score" id="scoreHidden" value="">
       <div>
         <label for="name">Dein Name</label>
         <input id="name" name="name" type="text" placeholder="Max Mustermann" required>
@@ -140,16 +148,14 @@
       </div>
       <div>
         <label for="msg">Nachricht (optional)</label>
-        <textarea id="msg" name="msg" placeholder="Dein Anliegen (z. B. Einsparung, Altersvorsorge, Überblick über Verträge)"></textarea>
+        <textarea id="msg" name="message" placeholder="Dein Anliegen (z. B. Einsparung, Altersvorsorge, Überblick über Verträge)"></textarea>
       </div>
       <div class="actions">
-        <button id="sendBtn" type="button" onclick="sendClicked()">Ergebnisse senden</button>
-        <a id="mailtoLink" class="btn" href="#" style="display:none">E‑Mail mit Ergebnissen öffnen</a>
+        <button id="sendBtn" type="submit">Ergebnisse senden</button>
       </div>
       <p class="small">Direkter Kontakt: <b>Thomas Dörffel</b> – Unternehmensberater für den privaten Haushalt • ✉️ thomas.doerffel@telis-finanz.de • 📞 01522 3076830 • Instagram: @thomas_doerffel</p>
     </form>
   </section>
-
 </main>
 
 <footer>
@@ -157,17 +163,29 @@
 </footer>
 
 <script>
+// === CONFIG ===
+const FORMSPREE_ID = "https://formspree.io/f/xqaljolj"
+const FORMSPREE_ENDPOINT = FORMSPREE_ID ? ("https://formspree.io/" + FORMSPREE_ID) : "";
+
+// === QUIZ LOGIC ===
+const calcBtn = document.getElementById('calc');
+const quizForm = document.getElementById('quiz');
+const resultSection = document.getElementById('resultSection');
+const contactSection = document.getElementById('contactSection');
+const scoreBadge = document.getElementById('scoreBadge');
+const resultText = document.getElementById('resultText');
+const contactForm = document.getElementById('contactForm');
+const scoreHidden = document.getElementById('scoreHidden');
+
 function getScore(){
-  var quizForm = document.getElementById('quiz');
-  var fields = ['sparquote','ziele','ueberblick','review','rente','wechsel','sicherheitsnetz'];
-  var total = 0; var answers = {};
-  for(var i=0;i<fields.length;i++){
-    var f = fields[i];
-    var checked = quizForm.querySelector('input[name="'+f+'"]:checked');
-    answers[f] = checked ? Number(checked.value) : null;
-    total += checked ? Number(checked.value) : 0;
+  const fields = ['sparquote','ziele','ueberblick','review','rente','wechsel','sicherheitsnetz'];
+  let total = 0; let answers = {};
+  for(const f of fields){
+    const el = quizForm.querySelector('input[name="'+f+'"]:checked');
+    answers[f] = el ? Number(el.value) : null;
+    total += el ? Number(el.value) : 0;
   }
-  return {total: total, answers: answers};
+  return {total, answers};
 }
 
 function buildAdvice(total){
@@ -204,58 +222,66 @@ function buildAdvice(total){
   }
 }
 
-function calcClicked(){
-  var rs = document.getElementById('resultSection');
-  var cs = document.getElementById('contactSection');
-  var scoreBadge = document.getElementById('scoreBadge');
-  var resultText = document.getElementById('resultText');
-
-  var sc = getScore();
-  var fields = ['sparquote','ziele','ueberblick','review','rente','wechsel','sicherheitsnetz'];
-  for(var i=0;i<fields.length;i++){
-    if(sc.answers[fields[i]] === null){
-      alert("Bitte beantworte alle Fragen.");
-      return;
-    }
+calcBtn.addEventListener('click', function(){
+  const {total, answers} = getScore();
+  if(Object.values(answers).some(v => v === null)){
+    alert("Bitte beantworte alle Fragen.");
+    return;
   }
-  scoreBadge.textContent = "Score: " + sc.total + "/14";
-  var adv = buildAdvice(sc.total);
-  resultText.innerHTML = "<h3>"+adv.title+"</h3><ul>"+adv.bullets.map(function(b){return "<li>"+b+"</li>";}).join("")+"</ul><p><strong>"+adv.cta+"</strong></p>";
-  rs.style.display = 'block';
-  cs.style.display = 'block';
-  window.scrollTo({top: rs.offsetTop - 12, behavior:'smooth'});
-}
+  scoreBadge.textContent = "Score: " + total + "/14";
+  scoreHidden.value = total + "/14";
+  const adv = buildAdvice(total);
+  resultText.innerHTML = "<h3>"+adv.title+"</h3><ul>"+adv.bullets.map(b=>"<li>"+b+"</li>").join("")+"</ul><p><strong>"+adv.cta+"</strong></p>";
+  resultSection.style.display = 'block';
+  contactSection.style.display = 'block';
+  window.scrollTo({top: resultSection.offsetTop - 12, behavior:'smooth'});
+});
 
-function sendClicked(){
-  var sc = getScore();
-  var name = document.getElementById('name').value.trim();
-  var email = document.getElementById('email').value.trim();
-  var tel = document.getElementById('tel').value.trim();
-  var msg = document.getElementById('msg').value.trim();
+// === FORMSPREE SUBMIT (AJAX) ===
+const noticeMissing = document.getElementById('notice-missing');
+const noticeSuccess = document.getElementById('notice-success');
+const noticeFail = document.getElementById('notice-fail');
 
-  if(!name || !email || !tel){
-    alert("Bitte fülle Name, E‑Mail und Telefonnummer aus.");
+contactForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  if(!scoreHidden.value){
+    noticeMissing.style.display = 'block';
+    setTimeout(()=> noticeMissing.style.display='none', 3000);
+    return;
+  }
+  if(!FORMSPREE_ENDPOINT){
+    alert("Formspree ist noch nicht konfiguriert. Bitte trage deine Form-ID oben in der Datei ein (FORMSPREE_ID).");
     return;
   }
 
-  var body = encodeURIComponent(
-    "Finanz‑Selbsttest – Ergebnis\n" +
-    "Name: " + name + "\n" +
-    "E‑Mail: " + email + "\n" +
-    "Telefon: " + tel + "\n" +
-    "Score: " + sc.total + "/14\n" +
-    (msg ? "Nachricht: " + msg + "\n" : "") +
-    "Bitte um Rückmeldung mit Vorschlägen."
-  );
-  var subject = encodeURIComponent("Finanz‑Selbsttest – Kontakt");
-  var to = "thomas.doerffel@telis-finanz.de";
-  var href = "mailto:" + to + "?subject=" + subject + "&body=" + body;
-  var link = document.getElementById('mailtoLink');
-  link.href = href;
-  link.style.display = 'inline-block';
-  link.textContent = "E‑Mail mit Ergebnissen öffnen";
-  window.location.href = href;
-}
+  const formData = new FormData(contactForm);
+  const {total} = getScore();
+  formData.append("score_raw", String(total));
+  formData.append("_subject", "Finanz‑Selbsttest – neuer Lead");
+  formData.append("_replyto", document.getElementById('email').value);
+
+  try {
+    const res = await fetch(FORMSPREE_ENDPOINT, {
+      method: "POST",
+      headers: { "Accept": "application/json" },
+      body: formData
+    });
+    if (res.ok) {
+      noticeSuccess.style.display = 'block';
+      noticeFail.style.display = 'none';
+      contactForm.reset();
+      scoreHidden.value = "";
+      window.scrollTo({top: contactSection.offsetTop - 12, behavior:'smooth'});
+    } else {
+      noticeFail.style.display = 'block';
+      noticeSuccess.style.display = 'none';
+    }
+  } catch (err) {
+    noticeFail.style.display = 'block';
+    noticeSuccess.style.display = 'none';
+  }
+});
 </script>
 </body>
 </html>
