@@ -163,9 +163,11 @@
 </footer>
 
 <script>
-const FORMSPREE_ID = "f/mayplrbn";
+// === CONFIG ===
+const FORMSPREE_ID = "f/mayplrbn"; // deine Formspree-ID
 const FORMSPREE_ENDPOINT = FORMSPREE_ID ? ("https://formspree.io/" + FORMSPREE_ID) : "";
 
+// === QUIZ LOGIC ===
 const calcBtn = document.getElementById('calc');
 const quizForm = document.getElementById('quiz');
 const resultSection = document.getElementById('resultSection');
@@ -235,6 +237,7 @@ calcBtn.addEventListener('click', function(){
   window.scrollTo({top: resultSection.offsetTop - 12, behavior:'smooth'});
 });
 
+// === FORMSPREE SUBMIT (AJAX) ===
 const noticeMissing = document.getElementById('notice-missing');
 const noticeSuccess = document.getElementById('notice-success');
 const noticeFail = document.getElementById('notice-fail');
