@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Formspree-Minittest</title>
+  <style>
+    body{font-family:system-ui,Arial,sans-serif;margin:24px;color:#222}
+    .wrap{max-width:520px;margin:0 auto}
+    input,textarea,button{width:100%;padding:12px;font-size:16px;border:1px solid #ddd;border-radius:10px;margin:8px 0}
+    button{background:#222;color:#fff;border:none;font-weight:600;cursor:pointer}
+    .hint{color:#555;font-size:14px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Formspree-Minittest</h1>
+    <p class="hint">Wenn dieser Test funktioniert, liegt es nicht an Formspree. Wenn er scheitert, fehlt fast sicher die Bestätigungsmail.</p>
+    <form action="https://formspree.io/f/movlbznq" method="POST">
+      <input type="hidden" name="_subject" value="Minittest">
+      <label>Dein Name
+        <input name="name" type="text" placeholder="Max Mustermann" required>
+      </label>
+      <label>Deine E‑Mail
+        <input name="email" type="email" placeholder="max@example.com" required>
+      </label>
+      <label>Nachricht
+        <textarea name="message" placeholder="Nur ein Test" required></textarea>
+      </label>
+      <button type="submit">Senden</button>
+      <p class="hint">Nach dem Absenden solltest du auf eine Formspree-Danke‑Seite kommen.</p>
+    </form>
+  </div>
+</body>
+</html>
