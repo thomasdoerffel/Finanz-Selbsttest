@@ -129,11 +129,11 @@
     <p class="pill">Ich melde mich kurzfristig bei dir mit konkreten Vorschlägen – z. B. zu Einsparungen, besserer Planung oder dem Schließen deiner Rentenlücke.</p>
 
     <div id="notice-missing" class="error">Bitte erst die 7 Fragen beantworten und „Ergebnis anzeigen“ klicken.</div>
-    <div id="notice-success" class="success">Danke – deine Ergebnisse wurden gesendet. Ich melde mich kurzfristig bei dir.</div>
-    <div id="notice-fail" class="error">Senden fehlgeschlagen. Bitte prüfe die Felder oder versuche es später erneut.</div>
 
-    <form id="contactForm" class="contact">
+    <form id="contactForm" class="contact" action="https://formspree.io/f/movlbznq" method="POST">
+      <input type="hidden" name="_subject" value="Finanz‑Selbsttest – neuer Lead">
       <input type="hidden" name="score" id="scoreHidden" value="">
+      <input type="hidden" name="_replyto" id="replytoHidden" value="">
       <div>
         <label for="name">Dein Name</label>
         <input id="name" name="name" type="text" placeholder="Max Mustermann" required>
@@ -163,11 +163,6 @@
 </footer>
 
 <script>
-// === CONFIG ===
-const FORMSPREE_ID = "f/movlbznq"; // deine Formspree-ID
-const FORMSPREE_ENDPOINT = FORMSPREE_ID ? ("https://formspree.io/f/movlbznq" + FORMSPREE_ID) : "";
-
-// === QUIZ LOGIC ===
 const calcBtn = document.getElementById('calc');
 const quizForm = document.getElementById('quiz');
 const resultSection = document.getElementById('resultSection');
@@ -176,6 +171,8 @@ const scoreBadge = document.getElementById('scoreBadge');
 const resultText = document.getElementById('resultText');
 const contactForm = document.getElementById('contactForm');
 const scoreHidden = document.getElementById('scoreHidden');
+const replytoHidden = document.getElementById('replytoHidden');
+const noticeMissing = document.getElementById('notice-missing');
 
 function getScore(){
   const fields = ['sparquote','ziele','ueberblick','review','rente','wechsel','sicherheitsnetz'];
@@ -237,50 +234,16 @@ calcBtn.addEventListener('click', function(){
   window.scrollTo({top: resultSection.offsetTop - 12, behavior:'smooth'});
 });
 
-// === FORMSPREE SUBMIT (AJAX) ===
-const noticeMissing = document.getElementById('notice-missing');
-const noticeSuccess = document.getElementById('notice-success');
-const noticeFail = document.getElementById('notice-fail');
-
-contactForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-
+// Vor dem Absenden Reply-To setzen und prüfen, ob Ergebnis berechnet wurde
+contactForm.addEventListener('submit', (e) => {
   if(!scoreHidden.value){
+    e.preventDefault();
     noticeMissing.style.display = 'block';
     setTimeout(()=> noticeMissing.style.display='none', 3000);
     return;
   }
-  if(!FORMSPREE_ENDPOINT){
-    alert("Formspree ist noch nicht konfiguriert. Bitte trage deine Form-ID oben in der Datei ein (FORMSPREE_ID).");
-    return;
-  }
-
-  const formData = new FormData(contactForm);
-  const {total} = getScore();
-  formData.append("score_raw", String(total));
-  formData.append("_subject", "Finanz‑Selbsttest – neuer Lead");
-  formData.append("_replyto", document.getElementById('email').value);
-
-  try {
-    const res = await fetch(FORMSPREE_ENDPOINT, {
-      method: "POST",
-      headers: { "Accept": "application/json" },
-      body: formData
-    });
-    if (res.ok) {
-      noticeSuccess.style.display = 'block';
-      noticeFail.style.display = 'none';
-      contactForm.reset();
-      scoreHidden.value = "";
-      window.scrollTo({top: contactSection.offsetTop - 12, behavior:'smooth'});
-    } else {
-      noticeFail.style.display = 'block';
-      noticeSuccess.style.display = 'none';
-    }
-  } catch (err) {
-    noticeFail.style.display = 'block';
-    noticeSuccess.style.display = 'none';
-  }
+  const emailInput = document.getElementById('email');
+  if (emailInput && replytoHidden) replytoHidden.value = emailInput.value;
 });
 </script>
 </body>
