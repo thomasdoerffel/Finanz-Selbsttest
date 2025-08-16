@@ -73,7 +73,7 @@
       </fieldset>
 
       <fieldset class="q">
-        <legend>Hast du eine Vorstellung von deiner Rentenlücke?</legend>
+        <legend>Hast du eine Vorstellung von deiner Rentenlücke (Differenz zwischen letztem Gehalt und deiner Rente)?</legend>
         <div class="opt">
           <label class="opt-item"><input type="radio" name="rentenluecke" value="2"> Ja, mit konkreter Zahl/Plan.</label>
           <label class="opt-item"><input type="radio" name="rentenluecke" value="1"> Grob geschätzt, aber unsicher.</label>
@@ -109,11 +109,11 @@
       </fieldset>
 
       <fieldset class="q">
-        <legend>Wie wichtig ist dir „alles aus einer Hand“ bei Geld- & Versicherungsthemen?</legend>
+        <legend>Wie wichtig ist dir ein persönlicher Ansprechpartner für alle Finanz- & Versicherungsthemen?</legend>
         <div class="opt">
-          <label class="opt-item"><input type="radio" name="allesaushand" value="2"> Sehr wichtig.</label>
-          <label class="opt-item"><input type="radio" name="allesaushand" value="1"> Nett, aber nicht entscheidend.</label>
-          <label class="opt-item"><input type="radio" name="allesaushand" value="0"> Kein Thema für mich.</label>
+          <label class="opt-item"><input type="radio" name="anpsrechpartner" value="2"> Sehr wichtig.</label>
+          <label class="opt-item"><input type="radio" name="anpsrechpartner" value="1"> Nett, aber nicht entscheidend.</label>
+          <label class="opt-item"><input type="radio" name="anpsrechpartner" value="0"> Kein Thema für mich.</label>
         </div>
       </fieldset>
 
@@ -190,6 +190,7 @@
         <button id="sendBtn" type="submit">Ergebnisse senden</button>
       </div>
       <p class="small">Direkter Kontakt: <b>Thomas Dörffel</b> – Unternehmensberater für den privaten Haushalt • ✉️ thomas.doerffel@telis-finanz.de • 📞 01522 3076830 • Instagram: @thomas_doerffel</p>
+      <p class="small muted">🔒 Datenschutz-Hinweis: Deine Angaben werden ausschließlich für die Auswertung des Selbsttests und die Kontaktaufnahme genutzt. Eine Weitergabe an Dritte erfolgt nicht.</p>
     </form>
   </section>
 </main>
@@ -198,94 +199,5 @@
   <div class="small">© Thomas Dörffel · Unternehmensberater für den privaten Haushalt</div>
 </footer>
 
-<script>
-const calcBtn = document.getElementById('calc');
-const quizForm = document.getElementById('quiz');
-const resultSection = document.getElementById('resultSection');
-const contactSection = document.getElementById('contactSection');
-const scoreBadge = document.getElementById('scoreBadge');
-const resultText = document.getElementById('resultText');
-const contactForm = document.getElementById('contactForm');
-const scoreHidden = document.getElementById('scoreHidden');
-const scoreRawHidden = document.getElementById('scoreRawHidden');
-const replytoHidden = document.getElementById('replytoHidden');
-const noticeMissing = document.getElementById('notice-missing');
-
-function getScore(){
-  const fields = [
-    'sicherheitsgefuehl','haushalt','notgroschen','rentenluecke','inflation',
-    'ueberblick','wechselcheck','allesaushand','ziele','unterstuetzung','portal'
-  ];
-  let total = 0; let answers = {};
-  for(const f of fields){
-    const el = quizForm.querySelector('input[name="'+f+'"]:checked');
-    answers[f] = el ? Number(el.value) : null;
-    total += el ? Number(el.value) : 0;
-  }
-  return {total, answers};
-}
-
-function buildAdvice(total){
-  if(total >= 17){
-    return {
-      title: "Sehr solide Basis – jetzt lohnt sich Feintuning",
-      bullets: [
-        "Kosten & Konditionen optimieren (Tarife, Steueraspekte, Zinsen).",
-        "Rentenplanung inkl. Inflation regelmäßig abgleichen.",
-        "Alles bequem im Mandantenportal bündeln – spart Zeit & Nerven."
-      ],
-      cta: "Wenn du willst, schauen wir gemeinsam auf die letzten 10–15 % Potenzial."
-    };
-  } else if(total >= 10){
-    return {
-      title: "Gute Grundlage – hier steckt messbares Potenzial",
-      bullets: [
-        "Haushaltsanalyse für klaren Überblick & realistische Ziele.",
-        "Rentenlücke + Kaufkraft (Inflation) konkret berechnen.",
-        "Jährlicher Wechselcheck einführen; Verträge bündeln."
-      ],
-      cta: "Ich zeige dir, wie du Struktur reinbringst und gleichzeitig Kosten senkst – alles aus einer Hand."
-    };
-  } else {
-    return {
-      title: "Jetzt ist ein klarer Plan Gold wert",
-      bullets: [
-        "Schneller Überblick: Einnahmen/Ausgaben, Notgroschen, Absicherung.",
-        "Altersvorsorge starten: Rentenlücke & Inflation berücksichtigen.",
-        "Fix sparen durch Tarife prüfen und Anbieterwechsel."
-      ],
-      cta: "Lass uns das zusammen angehen – Schritt für Schritt, mit 4.000+ Produktoptionen und Mandantenportal."
-    };
-  }
-}
-
-calcBtn.addEventListener('click', function(){
-  const {total, answers} = getScore();
-  if(Object.values(answers).some(v => v === null)){
-    alert("Bitte beantworte alle 11 Fragen.");
-    return;
-  }
-  scoreBadge.textContent = "Score: " + total + "/22";
-  scoreHidden.value = total + "/22";
-  scoreRawHidden.value = String(total);
-  const adv = buildAdvice(total);
-  resultText.innerHTML = "<h3>"+adv.title+"</h3><ul>"+adv.bullets.map(b=>"<li>"+b+"</li>").join("")+"</ul><p><strong>"+adv.cta+"</strong></p>";
-  resultSection.style.display = 'block';
-  contactSection.style.display = 'block';
-  window.scrollTo({top: resultSection.offsetTop - 12, behavior:'smooth'});
-});
-
-// Vor dem Absenden Reply-To setzen und prüfen, ob Ergebnis berechnet wurde
-contactForm.addEventListener('submit', (e) => {
-  if(!scoreHidden.value){
-    e.preventDefault();
-    noticeMissing.style.display = 'block';
-    setTimeout(()=> noticeMissing.style.display='none', 3000);
-    return;
-  }
-  const emailInput = document.getElementById('email');
-  if (emailInput && replytoHidden) replytoHidden.value = emailInput.value;
-});
-</script>
 </body>
 </html>
