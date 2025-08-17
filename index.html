@@ -1,152 +1,313 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Finanz-Selbsttest – Thomas Dörffel</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #003F8C; /* Telis-Blau */
-      color: #fff;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      text-align: center;
-      padding: 20px;
-      background-color: #002b60;
-    }
-    h1 {
-      margin: 0;
-      font-size: 2em;
-    }
-    main {
-      max-width: 800px;
-      margin: 20px auto;
-      background: #004fa8;
-      padding: 20px;
-      border-radius: 10px;
-    }
-    fieldset {
-      border: none;
-      margin-bottom: 20px;
-    }
-    legend {
-      font-weight: bold;
-      margin-bottom: 10px;
-      display: block;
-    }
-    label {
-      display: block;
-      margin: 5px 0;
-    }
-    button {
-      background-color: #D4AF37; /* Gold */
-      color: #000;
-      border: none;
-      padding: 12px 20px;
-      font-size: 1em;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #b9972e;
-    }
-    footer {
-      text-align: center;
-      font-size: 0.8em;
-      margin: 20px;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Finanz‑Selbsttest – Thomas Dörffel</title>
+<style>
+  :root{
+    --blue:#003F8C;
+    --blue-dark:#002b60;
+    --gold:#D4AF37;
+    --ink:#0e2a52;
+    --bg:#f7f8fb;
+    --white:#ffffff;
+  }
+  *{box-sizing:border-box}
+  body{ margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; color:#111; background:var(--bg); }
+  header{
+    background:var(--blue); color:#fff; text-align:center;
+    padding:28px 16px; border-bottom:6px solid var(--gold);
+  }
+  h1{ margin:0 0 8px; font-size:clamp(22px,4vw,34px); }
+  p.lead{ margin:0 auto; max-width:960px; font-size:clamp(14px,2.2vw,18px); opacity:.95 }
+  main{ max-width:980px; margin:26px auto 56px; padding:0 16px; }
+  .card{
+    background:#fff; border:1px solid #e8ecf2; border-radius:16px; padding:22px; margin:16px 0;
+    box-shadow:0 10px 26px rgba(0,0,0,.06);
+  }
+  h2{ margin:0 0 8px; font-size:clamp(18px,3vw,24px); color:var(--blue) }
+  .q{ margin:16px 0; }
+  .q legend{ font-weight:700; margin-bottom:8px; color:var(--blue) }
+  .opt{ display:flex; gap:12px; flex-wrap:wrap; }
+  label.opt-item{
+    display:flex; gap:8px; align-items:center; background:#f5f8ff; color:var(--ink);
+    padding:10px 12px; border-radius:12px; border:1px solid #dbe6ff; cursor:pointer;
+  }
+  input[type="radio"]{ accent-color:var(--gold); }
+  .actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top:16px; }
+  button{ background:var(--gold); color:#122;
+    border:none; padding:12px 16px; border-radius:12px; cursor:pointer; font-weight:700; }
+  button.secondary{ background:#fff; color:var(--blue); border:2px solid var(--blue); }
+  .muted{ color:#667; font-size:14px }
+  .result{ border-left:6px solid var(--gold); padding-left:16px; }
+  .badge{ display:inline-block; padding:6px 10px; border-radius:999px; background:#fff3cf; border:1px solid var(--gold); font-weight:700; color:#5b4600 }
+  footer{ background:var(--blue-dark); color:#e9f0ff; border-top:1px solid #072a5a; padding:20px 16px; text-align:center; }
+  .small{ font-size:13px }
+  .hr{ height:1px; background:#e9eef6; margin:16px 0; }
+  .contact{ display:grid; gap:12px; grid-template-columns:1fr; max-width:720px; }
+  input[type="text"],input[type="email"],input[type="tel"], textarea{
+    width:100%; padding:12px 14px; border-radius:10px; border:1px solid #d9e2f2; font-size:15px; background:#fff;
+  }
+  textarea{ min-height:110px }
+  .pill{ background:#e6efff; color:var(--ink); padding:10px 12px; border-radius:12px; border:1px solid #cddcff; }
+  .error{ background:#fff4f4; border:1px solid #f0b2b2; color:#7a0a0a; padding:12px 14px; border-radius:12px; display:none; }
+</style>
 </head>
 <body>
-  <header>
-    <h1>Dein Finanz-Selbsttest</h1>
-    <p>Beantworte 11 kurze Fragen und erfahre, wie du aufgestellt bist.</p>
-  </header>
-  <main>
-    <form action="https://formspree.io/f/movlbznq" method="POST">
-      <fieldset>
-        <legend>1. Hast du einen Notgroschen für unerwartete Ausgaben?</legend>
-        <label><input type="radio" name="frage1" value="Ja" required> Ja</label>
-        <label><input type="radio" name="frage1" value="Nein"> Nein</label>
+<header>
+  <h1>Dein Finanz‑Selbsttest</h1>
+  <p class="lead">11 kurze Fragen – sofort sehen, wie du aufgestellt bist. Fokus auf Überblick, Absicherung, Rentenlücke & Einsparpotenziale.</p>
+</header>
+
+<main>
+  <section class="card">
+    <h2>1) Beantworte die 11 Fragen</h2>
+    <form id="quiz" onsubmit="return false">
+      <!-- 1 -->
+      <fieldset class="q">
+        <legend>1. Wie sicher fühlst du dich aktuell mit deiner finanziellen Situation?</legend>
+        <div class="opt">
+          <label class="opt-item"><input type="radio" name="sicherheitsgefuehl" value="2"> Sehr sicher – ich habe alles im Griff.</label>
+          <label class="opt-item"><input type="radio" name="sicherheitsgefuehl" value="1"> Teils/teils – manches läuft, manches nicht.</label>
+          <label class="opt-item"><input type="radio" name="sicherheitsgefuehl" value="0"> Unsicher – ich habe wenig Überblick.</label>
+        </div>
+      </fieldset>
+      <!-- 2 -->
+      <fieldset class="q">
+        <legend>2. Hast du dir bewusst Zeit genommen, Einnahmen und Ausgaben zu vergleichen?</legend>
+        <div class="opt">
+          <label class="opt-item"><input type="radio" name="haushalt" value="2"> Ja, regelmäßig.</label>
+          <label class="opt-item"><input type="radio" name="haushalt" value="1"> Ab und zu.</label>
+          <label class="opt-item"><input type="radio" name="haushalt" value="0"> Selten oder nie.</label>
+        </div>
+      </fieldset>
+      <!-- 3 -->
+      <fieldset class="q">
+        <legend>3. Wie gut sind deine Rücklagen (Notgroschen)?</legend>
+        <div class="opt">
+          <label class="opt-item"><input type="radio" name="notgroschen" value="2"> 3–6 Monatsausgaben vorhanden.</label>
+          <label class="opt-item"><input type="radio" name="notgroschen" value="1"> Reicht für 1–2 Monate.</label>
+          <label class="opt-item"><input type="radio" name="notgroschen" value="0"> Kaum oder keine Rücklagen.</label>
+        </div>
+      </fieldset>
+      <!-- 4 -->
+      <fieldset class="q">
+        <legend>4. Hast du eine Vorstellung von deiner Rentenlücke (Differenz zwischen letztem Gehalt und deiner Rente)?</legend>
+        <div class="opt">
+          <label class="opt-item"><input type="radio" name="rentenluecke" value="2"> Ja, mit konkreter Zahl/Plan.</label>
+          <label class="opt-item"><input type="radio" name="rentenluecke" value="1"> Grob geschätzt, aber unsicher.</label>
+          <label class="opt-item"><input type="radio" name="rentenluecke" value="0"> Keine Ahnung.</label>
+        </div>
+      </fieldset>
+      <!-- 5 -->
+      <fieldset class="q">
+        <legend>5. Berücksichtigst du bei deiner Altersvorsorge die Inflation (Kaufkraftverlust)?</legend>
+        <div class="opt">
+          <label class="opt-item"><input type="radio" name="inflation" value="2"> Ja, ist in meiner Planung berücksichtigt.</label>
+          <label class="opt-item"><input type="radio" name="inflation" value="1"> Schon gehört, aber nicht eingeplant.</label>
+          <label class="opt-item"><input type="radio" name="inflation" value="0"> Nein, darüber habe ich noch nicht nachgedacht.</label>
+        </div>
+      </fieldset>
+      <!-- 6 -->
+      <fieldset class="q">
+        <legend>6. Wie gut kennst du deine Versicherungen & Verträge?</legend>
+        <div class="opt">
+          <label class="opt-item"><input type="radio" name="ueberblick" value="2"> Klarer Überblick (z. B. digital gebündelt).</label>
+          <label class="opt-item"><input type="radio" name="ueberblick" value="1"> Grober Überblick.</label>
+          <label class="opt-item"><input type="radio" name="ueberblick" value="0"> Keine Übersicht.</label>
+        </div>
+      </fieldset>
+      <!-- 7 -->
+      <fieldset class="q">
+        <legend>7. Prüfst du regelmäßig, ob Tarife & Anbieter noch passen?</legend>
+        <div class="opt">
+          <label class="opt-item"><input type="radio" name="wechselcheck" value="2"> Jährlich.</label>
+          <label class="opt-item"><input type="radio" name="wechselcheck" value="1"> Alle paar Jahre.</label>
+          <label class="opt-item"><input type="radio" name="wechselcheck" value="0"> Nie.</label>
+        </div>
+      </fieldset>
+      <!-- 8 -->
+      <fieldset class="q">
+        <legend>8. Welche Rolle spielen persönliche Ziele (Eigenheim, Reisen, Familie) für deine Finanzplanung?</legend>
+        <div class="opt">
+          <label class="opt-item"><input type="radio" name="ziele" value="2"> Große Rolle – ich plane bewusst.</label>
+          <label class="opt-item"><input type="radio" name="ziele" value="1"> Denke darüber nach, aber ohne Plan.</label>
+          <label class="opt-item"><input type="radio" name="ziele" value="0"> Eher keine Rolle.</label>
+        </div>
+      </fieldset>
+      <!-- 9 -->
+      <fieldset class="q">
+        <legend>9. Wie wichtig ist dir ein persönlicher Ansprechpartner für alle Finanz- & Versicherungsthemen?</legend>
+        <div class="opt">
+          <label class="opt-item"><input type="radio" name="ansprechpartner" value="2"> Sehr wichtig.</label>
+          <label class="opt-item"><input type="radio" name="ansprechpartner" value="1"> Nett, aber nicht entscheidend.</label>
+          <label class="opt-item"><input type="radio" name="ansprechpartner" value="0"> Kein Thema für mich.</label>
+        </div>
+      </fieldset>
+      <!-- 10 -->
+      <fieldset class="q">
+        <legend>10. Wie attraktiv fändest du ein digitales Mandantenportal für all deine Finanzen & Versicherungen?</legend>
+        <div class="opt">
+          <label class="opt-item"><input type="radio" name="portal" value="2"> Sehr attraktiv.</label>
+          <label class="opt-item"><input type="radio" name="portal" value="1"> Interessant.</label>
+          <label class="opt-item"><input type="radio" name="portal" value="0"> Brauche ich nicht.</label>
+        </div>
+      </fieldset>
+      <!-- 11 -->
+      <fieldset class="q">
+        <legend>11. Hast du schon professionelle Unterstützung genutzt, um Einsparungen/Konditionen zu verbessern?</legend>
+        <div class="opt">
+          <label class="opt-item"><input type="radio" name="unterstuetzung" value="2"> Ja, mehrfach.</label>
+          <label class="opt-item"><input type="radio" name="unterstuetzung" value="1"> Einmal.</label>
+          <label class="opt-item"><input type="radio" name="unterstuetzung" value="0"> Noch nie.</label>
+        </div>
       </fieldset>
 
-      <fieldset>
-        <legend>2. Hast du deine Fixkosten im Überblick?</legend>
-        <label><input type="radio" name="frage2" value="Ja" required> Ja</label>
-        <label><input type="radio" name="frage2" value="Nein"> Nein</label>
-      </fieldset>
-
-      <fieldset>
-        <legend>3. Kennst du deine Rentenlücke (Gehalt – Rente)?</legend>
-        <label><input type="radio" name="frage3" value="Ja" required> Ja</label>
-        <label><input type="radio" name="frage3" value="Nein"> Nein</label>
-      </fieldset>
-
-      <fieldset>
-        <legend>4. Berücksichtigst du Inflation bei deiner Altersvorsorge?</legend>
-        <label><input type="radio" name="frage4" value="Ja" required> Ja</label>
-        <label><input type="radio" name="frage4" value="Nein"> Nein</label>
-      </fieldset>
-
-      <fieldset>
-        <legend>5. Prüfst du regelmäßig deine Versicherungen?</legend>
-        <label><input type="radio" name="frage5" value="Ja" required> Ja</label>
-        <label><input type="radio" name="frage5" value="Nein"> Nein</label>
-      </fieldset>
-
-      <fieldset>
-        <legend>6. Nutzt du staatliche Förderungen (z. B. Riester, Wohn-Riester)?</legend>
-        <label><input type="radio" name="frage6" value="Ja" required> Ja</label>
-        <label><input type="radio" name="frage6" value="Nein"> Nein</label>
-      </fieldset>
-
-      <fieldset>
-        <legend>7. Wünschst du dir einen Ansprechpartner für alle Finanzthemen?</legend>
-        <label><input type="radio" name="frage7" value="Ja" required> Ja</label>
-        <label><input type="radio" name="frage7" value="Nein"> Nein</label>
-      </fieldset>
-
-      <fieldset>
-        <legend>8. Möchtest du deinen Vermögensaufbau optimieren?</legend>
-        <label><input type="radio" name="frage8" value="Ja" required> Ja</label>
-        <label><input type="radio" name="frage8" value="Nein"> Nein</label>
-      </fieldset>
-
-      <fieldset>
-        <legend>9. Wäre ein jährlicher Finanz-Check für dich interessant?</legend>
-        <label><input type="radio" name="frage9" value="Ja" required> Ja</label>
-        <label><input type="radio" name="frage9" value="Nein"> Nein</label>
-      </fieldset>
-
-      <fieldset>
-        <legend>10. Interessierst du dich für digitale Übersicht über alle Finanzen (Mandantenportal)?</legend>
-        <label><input type="radio" name="frage10" value="Ja" required> Ja</label>
-        <label><input type="radio" name="frage10" value="Nein"> Nein</label>
-      </fieldset>
-
-      <fieldset>
-        <legend>11. Möchtest du mehr über mögliche Einsparungen erfahren?</legend>
-        <label><input type="radio" name="frage11" value="Ja" required> Ja</label>
-        <label><input type="radio" name="frage11" value="Nein"> Nein</label>
-      </fieldset>
-
-      <fieldset>
-        <legend>Deine Kontaktdaten</legend>
-        <label>Name: <input type="text" name="name" required></label>
-        <label>Email: <input type="email" name="email" required></label>
-        <label>Telefonnummer: <input type="tel" name="telefon" required></label>
-      </fieldset>
-
-      <p><small>🔒 Deine Daten werden ausschließlich für den Finanz-Selbsttest genutzt und nicht an Dritte weitergegeben.</small></p>
-
-      <button type="submit">Absenden & Ergebnis erhalten</button>
+      <div class="actions">
+        <button id="calc" type="button">Ergebnis anzeigen</button>
+        <button id="reset" type="reset" class="secondary">Zurücksetzen</button>
+      </div>
     </form>
-  </main>
-  <footer>
-    <p>© 2025 Thomas Dörffel – Telis Finanz</p>
-  </footer>
+  </section>
+
+  <!-- SEPARATE Ergebnis-Karte -->
+  <section id="resultSection" class="card" style="display:none">
+    <h2>2) Deine Auswertung</h2>
+    <div id="scoreBadge" class="badge">Score: 0/22</div>
+    <div class="hr"></div>
+    <div id="resultText" class="result"></div>
+    <p class="small muted">Hinweis: Diese Einschätzung ersetzt keine persönliche Beratung – sie zeigt dir Potenziale und nächste Schritte.</p>
+  </section>
+
+  <!-- Kontakt erst NACH Ergebnis -->
+  <section id="contactSection" class="card" style="display:none">
+    <h2>3) Ergebnisse schicken & Kontakt aufnehmen</h2>
+    <p class="pill">Ich melde mich kurzfristig bei dir mit konkreten Ideen – z. B. zu Überblick, Einsparungen, Absicherung und dem Schließen deiner Rentenlücke.</p>
+
+    <div id="notice-missing" class="error">Bitte erst alle Fragen beantworten und „Ergebnis anzeigen“ klicken.</div>
+
+    <form id="contactForm" class="contact" action="https://formspree.io/f/movlbznq" method="POST">
+      <input type="hidden" name="_subject" value="Finanz‑Selbsttest (11 Fragen) – neuer Lead">
+      <input type="hidden" name="score" id="scoreHidden" value="">
+      <input type="hidden" name="score_raw" id="scoreRawHidden" value="">
+      <input type="hidden" name="_replyto" id="replytoHidden" value="">
+      <div>
+        <label for="name">Dein Name</label>
+        <input id="name" name="name" type="text" placeholder="Max Mustermann" required>
+      </div>
+      <div>
+        <label for="email">Deine E-Mail</label>
+        <input id="email" name="email" type="email" placeholder="max@example.com" required>
+      </div>
+      <div>
+        <label for="tel">Deine Telefonnummer</label>
+        <input id="tel" name="tel" type="tel" placeholder="01522 3076830" required>
+      </div>
+      <div>
+        <label for="msg">Nachricht (optional)</label>
+        <textarea id="msg" name="message" placeholder="Dein Anliegen (z. B. Einsparung, Altersvorsorge, Überblick über Verträge)"></textarea>
+      </div>
+      <div class="actions">
+        <button id="sendBtn" type="submit">Ergebnisse senden</button>
+      </div>
+      <p class="small">Direkter Kontakt: <b>Thomas Dörffel</b> – Unternehmensberater für den privaten Haushalt • ✉️ thomas.doerffel@telis-finanz.de • 📞 01522 3076830 • Instagram: @thomas_doerffel</p>
+      <p class="small muted">🔒 Datenschutz-Hinweis: Deine Angaben werden ausschließlich für die Auswertung des Selbsttests und die Kontaktaufnahme genutzt. Eine Weitergabe an Dritte erfolgt nicht.</p>
+    </form>
+  </section>
+</main>
+
+<footer>
+  <div class="small">© Thomas Dörffel · Unternehmensberater für den privaten Haushalt</div>
+</footer>
+
+<script>
+const calcBtn = document.getElementById('calc');
+const quizForm = document.getElementById('quiz');
+const resultSection = document.getElementById('resultSection');
+const contactSection = document.getElementById('contactSection');
+const scoreBadge = document.getElementById('scoreBadge');
+const resultText = document.getElementById('resultText');
+const contactForm = document.getElementById('contactForm');
+const scoreHidden = document.getElementById('scoreHidden');
+const scoreRawHidden = document.getElementById('scoreRawHidden');
+const replytoHidden = document.getElementById('replytoHidden');
+const noticeMissing = document.getElementById('notice-missing');
+
+function getScore(){
+  const fields = [
+    'sicherheitsgefuehl','haushalt','notgroschen','rentenluecke','inflation',
+    'ueberblick','wechselcheck','ziele','ansprechpartner','portal','unterstuetzung'
+  ];
+  let total = 0; let answers = {};
+  for(const f of fields){
+    const el = quizForm.querySelector('input[name="'+f+'"]:checked');
+    answers[f] = el ? Number(el.value) : null;
+    total += el ? Number(el.value) : 0;
+  }
+  return {total, answers};
+}
+
+function buildAdvice(total){
+  if(total >= 17){
+    return {
+      title: "Sehr solide Basis – jetzt lohnt sich Feintuning",
+      bullets: [
+        "Kosten & Konditionen optimieren (Tarife, Steueraspekte, Zinsen).",
+        "Rentenplanung inkl. Inflation regelmäßig abgleichen.",
+        "Alles bequem im Mandantenportal bündeln – spart Zeit & Nerven."
+      ],
+      cta: "Wenn du willst, schauen wir gemeinsam auf die letzten 10–15 % Potenzial."
+    };
+  } else if(total >= 10){
+    return {
+      title: "Gute Grundlage – hier steckt messbares Potenzial",
+      bullets: [
+        "Haushaltsanalyse für klaren Überblick & realistische Ziele.",
+        "Rentenlücke + Kaufkraft (Inflation) konkret berechnen.",
+        "Jährlicher Wechselcheck einführen; Verträge bündeln."
+      ],
+      cta: "Ich zeige dir, wie du Struktur reinbringst und gleichzeitig Kosten senkst – alles aus einer Hand."
+    };
+  } else {
+    return {
+      title: "Jetzt ist ein klarer Plan Gold wert",
+      bullets: [
+        "Schneller Überblick: Einnahmen/Ausgaben, Notgroschen, Absicherung.",
+        "Altersvorsorge starten: Rentenlücke & Inflation berücksichtigen.",
+        "Fix sparen durch Tarife prüfen und Anbieterwechsel."
+      ],
+      cta: "Lass uns das zusammen angehen – Schritt für Schritt, mit 4.000+ Produktoptionen und Mandantenportal."
+    };
+  }
+}
+
+calcBtn.addEventListener('click', function(){
+  const {total, answers} = getScore();
+  if(Object.values(answers).some(v => v === null)){
+    alert("Bitte beantworte alle 11 Fragen.");
+    return;
+  }
+  scoreBadge.textContent = "Score: " + total + "/22";
+  scoreHidden.value = total + "/22";
+  scoreRawHidden.value = String(total);
+  const adv = buildAdvice(total);
+  resultText.innerHTML = "<h3>"+adv.title+"</h3><ul>"+adv.bullets.map(b=>"<li>"+b+"</li>").join("")+"</ul><p><strong>"+adv.cta+"</strong></p>";
+  resultSection.style.display = 'block';
+  contactSection.style.display = 'block';
+  window.scrollTo({top: resultSection.offsetTop - 12, behavior:'smooth'});
+});
+
+contactForm.addEventListener('submit', (e) => {
+  if(!scoreHidden.value){
+    e.preventDefault();
+    noticeMissing.style.display = 'block';
+    setTimeout(()=> noticeMissing.style.display='none', 3000);
+    return;
+  }
+  const emailInput = document.getElementById('email');
+  if (emailInput && replytoHidden) replytoHidden.value = emailInput.value;
+});
+</script>
 </body>
 </html>
